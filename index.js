@@ -85,7 +85,7 @@ if (args.length === 0) {
 
   // If the first character of the first argument is a number, process dimensions
 } else if (hasNumber(args[0][0])) {
-  const dims = args[0].split('X');
+  const dims = args[0].split('x');
   let hashWidth = Number(dims[0]);
   let hashHeight = Number(dims[1]);
   if (isEven(hashWidth)) {
