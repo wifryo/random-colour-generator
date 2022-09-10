@@ -1,56 +1,12 @@
 import chalk from 'chalk';
-import randomHex from 'random-hex';
-import randomColor from 'randomcolor';
 import promptSync from 'prompt-sync';
+import randomColor from 'randomcolor';
 
-let hashWidth = 31;
-let hashHeight = 9;
-
-let theme;
 let inputHue;
 let inputLum;
-let renderColour;
 const args = process.argv.slice(2);
 const prompt = promptSync();
 
-// Process arguments
-// If no additional arguments given, generate box of random colour with predefined dimensions
-if (args.length === 0) {
-  inputHue = randomHex.generate();
-  theme = chalk.hex(inputHue);
-  boxConstruct(hashWidth, hashHeight, theme, renderColour);
-  // If "ask" is used, prompt user for hue/luminosity and render box of predefined dimensions with them
-} else if (args.length === 1) {
-  if (args[0] === 'ask') {
-    inputHue = prompt('Input colour hue: ');
-    inputLum = prompt('Input colour luminosity: ');
-    renderColour = randomColor({ hue: inputHue, luminosity: inputLum });
-    theme = chalk.hex(renderColour);
-    boxConstruct(hashWidth, hashHeight, theme, renderColour);
-  }
-  // If the first character of the first argument is a number, process dimensions
-} else if (hasNumber(args[0][0])) {
-  const dims = args[0].split('X');
-  hashWidth = Number(dims[0]);
-  hashHeight = Number(dims[1]);
-  if (isEven(hashWidth)) {
-    hashWidth += 1;
-    console.log(
-      'Dimensions must be odd to preserve symmetry; width was auto-corrected.',
-    );
-  }
-  if (isEven(hashHeight)) {
-    hashHeight += 1;
-    console.log(
-      'Dimensions must be odd to preserve symmetry; height was auto-corrected.',
-    );
-  }
-  inputHue = args[1];
-  inputLum = args[2];
-  renderColour = randomColor({ hue: inputHue, luminosity: inputLum });
-  theme = chalk.hex(renderColour);
-  boxConstruct(hashWidth, hashHeight, theme, renderColour);
-}
 // Construct box
 function boxConstruct(hashWidth, hashHeight, theme, renderColour) {
   let vertHashMargin = 3;
@@ -62,7 +18,7 @@ function boxConstruct(hashWidth, hashHeight, theme, renderColour) {
   if (hashWidth < 17) {
     horizHashMargin = (hashWidth - 7) / 2;
   }
-  let internalPadding = (hashWidth - horizHashMargin * 2 - 7) / 2;
+  const internalPadding = (hashWidth - horizHashMargin * 2 - 7) / 2;
   // Loop over each row
   for (let j = 0; j < hashHeight; j++) {
     // Draw top hashes
@@ -108,5 +64,51 @@ function hasNumber(myString) {
 }
 // Function to determine if a number is even
 function isEven(n) {
-  return n % 2 == 0;
+  return n % 2 === 0;
+}
+
+// Process arguments
+// If no additional arguments given, generate box of random colour with predefined dimensions
+if (args.length === 0) {
+  const renderColour = randomColor();
+  const theme = chalk.hex(renderColour);
+  boxConstruct(31, 9, theme, renderColour);
+  // If "ask" is used, prompt user for hue/luminosity and render box of predefined dimensions with them
+} else if (args.length === 1) {
+  if (args[0] === 'ask') {
+    inputHue = prompt('Input colour hue: ');
+    inputLum = prompt('Input colour luminosity: ');
+    const renderColour = randomColor({ hue: inputHue, luminosity: inputLum });
+    const theme = chalk.hex(renderColour);
+    boxConstruct(31, 9, theme, renderColour);
+  }
+
+  // If the first character of the first argument is a number, process dimensions
+} else if (hasNumber(args[0][0])) {
+  const dims = args[0].split('X');
+  let hashWidth = Number(dims[0]);
+  let hashHeight = Number(dims[1]);
+  if (isEven(hashWidth)) {
+    hashWidth += 1;
+    console.log(
+      'Dimensions must be odd to preserve symmetry; width was auto-corrected.',
+    );
+  }
+  if (isEven(hashHeight)) {
+    hashHeight += 1;
+    console.log(
+      'Dimensions must be odd to preserve symmetry; height was auto-corrected.',
+    );
+  }
+  inputHue = args[1];
+  inputLum = args[2];
+  const renderColour = randomColor({ hue: inputHue, luminosity: inputLum });
+  const theme = chalk.hex(renderColour);
+  boxConstruct(hashWidth, hashHeight, theme, renderColour);
+} else if (args.length === 2) {
+  inputHue = args[0];
+  inputLum = args[1];
+  const renderColour = randomColor({ hue: inputHue, luminosity: inputLum });
+  const theme = chalk.hex(renderColour);
+  boxConstruct(31, 9, theme, renderColour);
 }
