@@ -14,7 +14,7 @@ If the keyword "ask" is passed as the only argument, the user is prompted to pro
 
 ![Prompted randomised colour box](/images/03.png)
 
-If the colour and luminosity are preceded by dimensions, using the syntax `node index.js <width>X<height> <colour> <luminosity>`, the box will be generated with dimensions that match those passed in:
+If the colour and luminosity are preceded by dimensions, using the syntax `node index.js <width>x<height> <colour> <luminosity>`, the box will be generated with dimensions that match those passed in:
 
 ![Defined dimensions randomised colour box](/images/04.png)
 
